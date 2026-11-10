@@ -160,4 +160,27 @@ TEST(ExecutorTest, should_face_north_when_turning_right_from_west)
     const Pose expected{2, 3, 'N'};
     ASSERT_EQ(expected, executor->Query());
 }
+TEST(ExecutorTest, should_execute_commands_in_order)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor());
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("MLMMRM");
+
+    const Pose expected{-2, 2, 'N'};
+    ASSERT_EQ(expected, executor->Query());
+}
+
+TEST(ExecutorTest, should_keep_pose_when_commands_are_empty)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'E'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("");
+
+    const Pose expected{2, 3, 'E'};
+    ASSERT_EQ(expected, executor->Query());
+}
 }  // namespace adas
