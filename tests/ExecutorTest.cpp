@@ -72,4 +72,92 @@ TEST(ExecutorTest, should_move_south_when_command_is_M)
     const Pose expected{0, -1, 'S'};
     ASSERT_EQ(expected, executor->Query());
 }
+TEST(ExecutorTest, should_face_west_when_turning_left_from_north)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'N'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("L");
+
+    const Pose expected{2, 3, 'W'};
+    ASSERT_EQ(expected, executor->Query());
+}
+TEST(ExecutorTest, should_face_south_when_turning_left_from_west)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'W'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("L");
+
+    const Pose expected{2, 3, 'S'};
+    ASSERT_EQ(expected, executor->Query());
+}
+TEST(ExecutorTest, should_face_east_when_turning_left_from_south)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'S'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("L");
+
+    const Pose expected{2, 3, 'E'};
+    ASSERT_EQ(expected, executor->Query());
+}
+TEST(ExecutorTest, should_face_north_when_turning_left_from_east)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'E'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("L");
+
+    const Pose expected{2, 3, 'N'};
+    ASSERT_EQ(expected, executor->Query());
+}
+TEST(ExecutorTest, should_face_east_when_turning_right_from_north)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'N'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("R");
+
+    const Pose expected{2, 3, 'E'};
+    ASSERT_EQ(expected, executor->Query());
+}
+TEST(ExecutorTest, should_face_south_when_turning_right_from_east)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'E'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("R");
+
+    const Pose expected{2, 3, 'S'};
+    ASSERT_EQ(expected, executor->Query());
+}
+TEST(ExecutorTest, should_face_west_when_turning_right_from_south)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'S'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("R");
+
+    const Pose expected{2, 3, 'W'};
+    ASSERT_EQ(expected, executor->Query());
+}
+TEST(ExecutorTest, should_face_east_when_turning_right_from_west)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'W'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("R");
+
+    const Pose expected{2, 3, 'E'};
+    ASSERT_EQ(expected, executor->Query());
+}
 }  // namespace adas
