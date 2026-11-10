@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug course tests",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/tests/training_main.exe",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "E:/mingw64/bin/gdb.exe",
+            "preLaunchTask": "Build",
+            "externalConsole": false,
+            "environment": [
+                {"name": "PATH", "value": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"}
+            ]
+        }
+    ]
+}

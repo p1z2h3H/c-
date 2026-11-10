@@ -1,0 +1,40 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Configure",
+            "type": "process",
+            "command": "C:/Program Files/CMake/bin/cmake.exe",
+            "args": ["-S", ".", "-B", "build", "-G", "MinGW Makefiles", "-DCMAKE_BUILD_TYPE=Debug", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"],
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {"PATH": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"}
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build",
+            "type": "process",
+            "command": "C:/Program Files/CMake/bin/cmake.exe",
+            "args": ["--build", "build", "--parallel", "4"],
+            "dependsOn": "Configure",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {"PATH": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"}
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Build and test",
+            "type": "process",
+            "command": "${workspaceFolder}/build/tests/training_main.exe",
+            "dependsOn": "Build",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {"PATH": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"}
+            },
+            "group": {"kind": "build", "isDefault": true},
+            "problemMatcher": []
+        }
+    ]
+}
