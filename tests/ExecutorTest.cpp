@@ -149,7 +149,7 @@ TEST(ExecutorTest, should_face_west_when_turning_right_from_south)
     const Pose expected{2, 3, 'W'};
     ASSERT_EQ(expected, executor->Query());
 }
-TEST(ExecutorTest, should_face_east_when_turning_right_from_west)
+TEST(ExecutorTest, should_face_north_when_turning_right_from_west)
 {
     std::unique_ptr<Executor> executor(Executor::NewExecutor({2, 3, 'W'}));
 
@@ -157,7 +157,7 @@ TEST(ExecutorTest, should_face_east_when_turning_right_from_west)
 
     executor->Execute("R");
 
-    const Pose expected{2, 3, 'E'};
+    const Pose expected{2, 3, 'N'};
     ASSERT_EQ(expected, executor->Query());
 }
 }  // namespace adas
