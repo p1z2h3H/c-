@@ -65,6 +65,7 @@
   },
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
+  "C_Cpp.debugShortcut": false,
   "cmake.cmakePath": "C:/Program Files/CMake/bin/cmake.exe",
   "cmake.generator": "MinGW Makefiles",
   "cmake.configureSettings": {

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Executor.hpp"
 
 namespace adas

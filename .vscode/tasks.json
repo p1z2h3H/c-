@@ -5,10 +5,21 @@
             "label": "Configure",
             "type": "process",
             "command": "C:/Program Files/CMake/bin/cmake.exe",
-            "args": ["-S", ".", "-B", "build", "-G", "MinGW Makefiles", "-DCMAKE_BUILD_TYPE=Debug", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"],
+            "args": [
+                "-S",
+                ".",
+                "-B",
+                "build",
+                "-G",
+                "MinGW Makefiles",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}",
-                "env": {"PATH": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"}
+                "env": {
+                    "PATH": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"
+                }
             },
             "problemMatcher": []
         },
@@ -16,13 +27,22 @@
             "label": "Build",
             "type": "process",
             "command": "C:/Program Files/CMake/bin/cmake.exe",
-            "args": ["--build", "build", "--parallel", "4"],
+            "args": [
+                "--build",
+                "build",
+                "--parallel",
+                "4"
+            ],
             "dependsOn": "Configure",
             "options": {
                 "cwd": "${workspaceFolder}",
-                "env": {"PATH": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"}
+                "env": {
+                    "PATH": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"
+                }
             },
-            "problemMatcher": ["$gcc"]
+            "problemMatcher": [
+                "$gcc"
+            ]
         },
         {
             "label": "Build and test",
@@ -31,9 +51,14 @@
             "dependsOn": "Build",
             "options": {
                 "cwd": "${workspaceFolder}",
-                "env": {"PATH": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"}
+                "env": {
+                    "PATH": "E:\\mingw64\\bin;C:\\Program Files\\CMake\\bin;${env:PATH}"
+                }
             },
-            "group": {"kind": "build", "isDefault": true},
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": []
         }
     ]
