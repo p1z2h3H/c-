@@ -28,26 +28,30 @@ void ExecutorImpl::Move() noexcept
         break;
     }
 }
+void ExecutorImpl::TurnLeft() noexcept
+{
+    switch (pose.heading) {
+    case 'N':
+        pose.heading = 'W';
+        break;
+    case 'W':
+        pose.heading = 'S';
+        break;
+    case 'S':
+        pose.heading = 'E';
+        break;
+    case 'E':
+        pose.heading = 'N';
+        break;
+    }
+}
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
     for (const char command : commands) {
         if (command == 'M') {
             Move();
         } else if (command == 'L') {
-            switch (pose.heading) {
-            case 'N':
-                pose.heading = 'W';
-                break;
-            case 'W':
-                pose.heading = 'S';
-                break;
-            case 'S':
-                pose.heading = 'E';
-                break;
-            case 'E':
-                pose.heading = 'N';
-                break;
-            }
+            TurnLeft();
         } else if (command == 'R') {
             switch (pose.heading) {
             case 'N':
