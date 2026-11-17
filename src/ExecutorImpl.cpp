@@ -11,24 +11,28 @@ Executor* Executor::NewExecutor(const Pose& pose) noexcept
 ExecutorImpl::ExecutorImpl(const Pose& initialPose) noexcept : pose{initialPose}
 {
 }
+void ExecutorImpl::Move() noexcept
+{
+    switch (pose.heading) {
+    case 'N':
+        ++pose.y;
+        break;
+    case 'S':
+        --pose.y;
+        break;
+    case 'E':
+        ++pose.x;
+        break;
+    case 'W':
+        --pose.x;
+        break;
+    }
+}
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
     for (const char command : commands) {
         if (command == 'M') {
-            switch (pose.heading) {
-            case 'N':
-                ++pose.y;
-                break;
-            case 'S':
-                --pose.y;
-                break;
-            case 'E':
-                ++pose.x;
-                break;
-            case 'W':
-                --pose.x;
-                break;
-            }
+            Move();
         } else if (command == 'L') {
             switch (pose.heading) {
             case 'N':
