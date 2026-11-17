@@ -56,4 +56,33 @@ TEST(ExecutorFastTest, should_cancel_fast_after_second_F)
     ASSERT_EQ(expected, executor->Query());
 }
 
+TEST(ExecutorFastTest, should_keep_fast_state_between_execute_calls)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'E'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("F");
+
+    const Pose afterFast{0, 0, 'E'};
+    ASSERT_EQ(afterFast, executor->Query());
+
+    executor->Execute("M");
+
+    const Pose afterMove{2, 0, 'E'};
+    ASSERT_EQ(afterMove, executor->Query());
+}
+
+TEST(ExecutorFastTest, should_return_to_normal_speed_after_toggling_off)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'E'}));
+
+    ASSERT_NE(nullptr, executor.get());
+
+    executor->Execute("FMFM");
+
+    const Pose expected{3, 0, 'E'};
+    ASSERT_EQ(expected, executor->Query());
+}
+
 }  // namespace adas
