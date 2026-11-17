@@ -63,6 +63,15 @@ void ExecutorImpl::TurnRight() noexcept
         break;
     }
 }
+void ExecutorImpl::Fast() noexcept
+{
+    fast = !fast;
+}
+
+bool ExecutorImpl::IsFast() const noexcept
+{
+    return fast;
+}
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
     for (const char command : commands) {
@@ -74,6 +83,8 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
             cmder = std::make_unique<TurnLeftCommand>();
         } else if (command == 'R') {
             cmder = std::make_unique<TurnRightCommand>();
+        } else if (command == 'F') {
+            cmder = std::make_unique<FastCommand>();
         }
 
         if (cmder) {
