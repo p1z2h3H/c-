@@ -1,11 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 
-if [ ! -f "build/tests/training_main" ]; then
-	echo "training_main not exists!"
-
-	exit 0
+if [[ ! -x build/tests/training_main ]]; then
+    echo "training_main does not exist. Run build.sh first." >&2
+    exit 1
 fi
 
-cd build/tests
-
-./training_main
+exec build/tests/training_main
