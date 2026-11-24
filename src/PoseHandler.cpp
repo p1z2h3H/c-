@@ -2,62 +2,65 @@
 
 namespace adas
 {
-PoseHandler::PoseHandler(const Pose& initialPose) noexcept : pose{initialPose}
+
+PoseHandler::PoseHandler(const Pose& initialPose) noexcept
+    : point{initialPose.x, initialPose.y}, heading{initialPose.heading}
 {
 }
 
 Pose PoseHandler::Query() const noexcept
 {
-    return pose;
+    return {point.GetX(), point.GetY(), heading};
 }
+
 void PoseHandler::Move() noexcept
 {
-    switch (pose.heading) {
+    switch (heading) {
     case 'N':
-        ++pose.y;
+        point += Point{0, 1};
         break;
     case 'S':
-        --pose.y;
+        point += Point{0, -1};
         break;
     case 'E':
-        ++pose.x;
+        point += Point{1, 0};
         break;
     case 'W':
-        --pose.x;
+        point += Point{-1, 0};
         break;
     }
 }
 void PoseHandler::TurnLeft() noexcept
 {
-    switch (pose.heading) {
+    switch (heading) {
     case 'N':
-        pose.heading = 'W';
+        heading = 'W';
         break;
     case 'W':
-        pose.heading = 'S';
+        heading = 'S';
         break;
     case 'S':
-        pose.heading = 'E';
+        heading = 'E';
         break;
     case 'E':
-        pose.heading = 'N';
+        heading = 'N';
         break;
     }
 }
 void PoseHandler::TurnRight() noexcept
 {
-    switch (pose.heading) {
+    switch (heading) {
     case 'N':
-        pose.heading = 'E';
+        heading = 'E';
         break;
     case 'E':
-        pose.heading = 'S';
+        heading = 'S';
         break;
     case 'S':
-        pose.heading = 'W';
+        heading = 'W';
         break;
     case 'W':
-        pose.heading = 'N';
+        heading = 'N';
         break;
     }
 }

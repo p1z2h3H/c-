@@ -1,6 +1,6 @@
 #pragma once
-
 #include "Executor.hpp"
+#include "Point.hpp"
 
 namespace adas
 {
@@ -16,7 +16,8 @@ public:
     bool IsFast() const noexcept;
 
 private:
-    Pose pose;
+    Point point;
+    char heading;
     bool fast{false};
 };
 }  // namespace adas
