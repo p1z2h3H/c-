@@ -34,7 +34,11 @@ public:
             state.Move();
         }
 
-        state.TurnLeft();
+        if (state.IsReverse()) {
+            state.TurnRight();
+        } else {
+            state.TurnLeft();
+        }
     }
 };
 
@@ -47,7 +51,11 @@ public:
             state.Move();
         }
 
-        state.TurnRight();
+        if (state.IsReverse()) {
+            state.TurnLeft();
+        } else {
+            state.TurnRight();
+        }
     }
 };
 

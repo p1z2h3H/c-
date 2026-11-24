@@ -15,6 +15,7 @@ public:
     void Fast() noexcept;
     bool IsFast() const noexcept;
     void Reverse() noexcept;
+    bool IsReverse() const noexcept;
 
 private:
     Point point;

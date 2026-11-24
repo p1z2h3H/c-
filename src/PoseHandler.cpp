@@ -26,7 +26,10 @@ void PoseHandler::Reverse() noexcept
 {
     reverse = !reverse;
 }
-
+bool PoseHandler::IsReverse() const noexcept
+{
+    return reverse;
+}
 void PoseHandler::TurnLeft() noexcept
 {
     direction.TurnLeft();
