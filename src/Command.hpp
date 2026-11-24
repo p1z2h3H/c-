@@ -68,4 +68,18 @@ public:
         state.Reverse();
     }
 };
+class TurnRoundCommand final
+{
+public:
+    void operator()(PoseHandler& state) const noexcept
+    {
+        if (state.IsFast()) {
+            state.Forward();
+        }
+
+        state.TurnLeft();
+        state.Forward();
+        state.TurnLeft();
+    }
+};
 }  // namespace adas

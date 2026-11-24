@@ -10,6 +10,7 @@ public:
     explicit PoseHandler(const Pose& initialPose) noexcept;
     Pose Query() const noexcept;
     void Move() noexcept;
+    void Forward() noexcept;
     void TurnLeft() noexcept;
     void TurnRight() noexcept;
     void Fast() noexcept;

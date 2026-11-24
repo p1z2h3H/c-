@@ -14,12 +14,16 @@ Pose PoseHandler::Query() const noexcept
 
 void PoseHandler::Move() noexcept
 {
-    const Point step = direction.Step();
     if (reverse) {
-        point -= step;
+        point -= direction.Step();
     } else {
-        point += step;
+        Forward();
     }
+}
+
+void PoseHandler::Forward() noexcept
+{
+    point += direction.Step();
 }
 
 void PoseHandler::Reverse() noexcept

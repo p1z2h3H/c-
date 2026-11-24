@@ -24,7 +24,15 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
         {'F', FastCommand{}}, {'B', ReverseCommand{}},
     };
 
-    for (const char command : commands) {
+    for (std::string::size_type index = 0; index < commands.size(); ++index) {
+        const char command = commands[index];
+
+        if (command == 'T' && index + 1 < commands.size() && commands[index + 1] == 'R') {
+            TurnRoundCommand{}(poseHandler);
+            ++index;
+            continue;
+        }
+
         const auto found = commandMap.find(command);
         if (found != commandMap.end()) {
             found->second(poseHandler);
