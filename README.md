@@ -28,12 +28,22 @@ ctest --test-dir build --output-on-failure
 
 ## 开发记录
 
-以下分支来自各阶段实际使用的本地 Git 仓库。导入时保留了原有文件快照、提交说明、时间与父子关系，公开邮箱使用 GitHub 的 noreply 地址。
+以下练习分支记录了彭彰航亲手完成的实验3-1、实验3-2和综合实验。可以按阶段逐条查看测试、实现与重构提交。
+
+| 阶段 | 本人操作记录 | 主要步骤 |
+| --- | --- | --- |
+| 实验3-1 | [practice/lab3-1](https://github.com/p1z2h3H/c-/commits/practice/lab3-1/) | 状态抽离、拆出指令类、表驱动、坐标与方向抽象 |
+| 实验3-2 | [practice/lab3-2](https://github.com/p1z2h3H/c-/commits/practice/lab3-2/) | 倒车和倒车转向先提交测试再实现，改用函数对象 |
+| 综合实验 | [practice/lab4](https://github.com/p1z2h3H/c-/commits/practice/lab4/) | 掉头、原子动作编排、指令工厂、单例、工程分层和车型扩展 |
+
+练习分支的综合实验在 Windows MinGW 下通过 28 项 GoogleTest 和 CTest。`main` 上方的测试数量对应打包提交的工程。
+
+以下是各阶段的原始提交记录。记录来自各阶段使用的本地 Git 仓库，导入时保留了文件快照、提交说明、时间与父子关系，公开邮箱使用 GitHub 的 noreply 地址。
 
 | 阶段 | 提交历史 | 可核验的开发过程 |
 | --- | --- | --- |
-| 实验1 | [history/lab1](https://github.com/p1z2h3H/c-/commits/history/lab1/) | 初始化、移动和转向分别先提交测试，再提交实现，最后增加批量与空指令测试。 |
-| 实验2 | [history/lab2](https://github.com/p1z2h3H/c-/commits/history/lab2/) | 逐步抽取基础动作和指令类，再引入多态。加速测试与功能实现分开提交。 |
+| 实验1 | [history/lab1](https://github.com/p1z2h3H/c-/commits/history/lab1/) | 初始化、移动和转向分别提交测试及实现，随后增加批量与空指令测试。 |
+| 实验2 | [history/lab2](https://github.com/p1z2h3H/c-/commits/history/lab2/) | 抽取基础动作和指令类，引入多态。加速测试与功能实现分开提交。 |
 | 实验3-1 | [history/lab3-1](https://github.com/p1z2h3H/c-/commits/history/lab3-1/) | 一次阶段提交，记录状态抽离和表驱动重构。 |
 | 实验3-2 | [history/lab3-2](https://github.com/p1z2h3H/c-/commits/history/lab3-2/) | 先提交倒车测试，再继承状态抽象，随后实现函数对象与倒车行为。 |
 | 综合实验 | [history/lab4](https://github.com/p1z2h3H/c-/commits/history/lab4/) | 一次阶段提交，记录掉头、车型行为和原子动作编排。 |
