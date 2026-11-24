@@ -5,67 +5,56 @@
 namespace adas
 {
 
+inline ActionType MovementAction(const PoseHandler& state) noexcept
+{
+    return state.IsReverse() ? ActionType::Backward : ActionType::Forward;
+}
+
 class MoveCommand final
 {
 public:
-    void operator()(PoseHandler& state) const noexcept
+    ActionGroup operator()(const PoseHandler& state) const
     {
-        if (state.IsFast()) {
-            state.Move();
-        }
-
-        state.Move();
+        const auto step = MovementAction(state);
+        return state.IsFast() ? ActionGroup{step, step} : ActionGroup{step};
     }
 };
 
 class TurnLeftCommand final
 {
 public:
-    void operator()(PoseHandler& state) const noexcept
+    ActionGroup operator()(const PoseHandler& state) const
     {
-        if (state.IsFast()) {
-            state.Move();
-        }
-
-        if (state.IsReverse()) {
-            state.TurnRight();
-        } else {
-            state.TurnLeft();
-        }
+        const auto turn = state.IsReverse() ? ActionType::ReverseTurnLeft : ActionType::TurnLeft;
+        return state.IsFast() ? ActionGroup{MovementAction(state), turn} : ActionGroup{turn};
     }
 };
 
 class TurnRightCommand final
 {
 public:
-    void operator()(PoseHandler& state) const noexcept
+    ActionGroup operator()(const PoseHandler& state) const
     {
-        if (state.IsFast()) {
-            state.Move();
-        }
-
-        if (state.IsReverse()) {
-            state.TurnLeft();
-        } else {
-            state.TurnRight();
-        }
+        const auto turn = state.IsReverse() ? ActionType::ReverseTurnRight : ActionType::TurnRight;
+        return state.IsFast() ? ActionGroup{MovementAction(state), turn} : ActionGroup{turn};
     }
 };
 
 class FastCommand final
 {
 public:
-    void operator()(PoseHandler& state) const noexcept
+    ActionGroup operator()(const PoseHandler&) const
     {
-        state.Fast();
+        return ActionGroup{ActionType::ToggleFast};
     }
 };
+
 class ReverseCommand final
 {
 public:
-    void operator()(PoseHandler& state) const noexcept
+    ActionGroup operator()(const PoseHandler&) const
     {
-        state.Reverse();
+        return ActionGroup{ActionType::ToggleReverse};
     }
 };
 

@@ -18,7 +18,7 @@ ExecutorImpl::ExecutorImpl(const Pose& initialPose) noexcept : poseHandler{initi
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
-    using CommandHandler = std::function<void(PoseHandler&)>;
+    using CommandHandler = std::function<ActionGroup(const PoseHandler&)>;
     static const std::unordered_map<char, CommandHandler> commandMap{
         {'M', MoveCommand{}}, {'L', TurnLeftCommand{}}, {'R', TurnRightCommand{}},
         {'F', FastCommand{}}, {'B', ReverseCommand{}},
@@ -35,7 +35,7 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
 
         const auto found = commandMap.find(command);
         if (found != commandMap.end()) {
-            found->second(poseHandler);
+            found->second(poseHandler).DoOperate(poseHandler);
         }
     }
 }

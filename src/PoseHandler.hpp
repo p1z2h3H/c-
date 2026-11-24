@@ -9,7 +9,6 @@ class PoseHandler
 public:
     explicit PoseHandler(const Pose& initialPose) noexcept;
     Pose Query() const noexcept;
-    void Move() noexcept;
     void Forward() noexcept;
     void Backward() noexcept;
     void TurnLeft() noexcept;

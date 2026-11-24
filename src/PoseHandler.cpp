@@ -12,14 +12,6 @@ Pose PoseHandler::Query() const noexcept
     return {point.GetX(), point.GetY(), direction.GetHeading()};
 }
 
-void PoseHandler::Move() noexcept
-{
-    if (reverse) {
-        Backward();
-    } else {
-        Forward();
-    }
-}
 void PoseHandler::Backward() noexcept
 {
     point -= direction.Step();
