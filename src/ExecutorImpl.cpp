@@ -3,6 +3,7 @@
 #include <new>
 
 #include "CmderFactory.hpp"
+#include "Singleton.hpp"
 
 namespace adas
 {
@@ -17,7 +18,7 @@ ExecutorImpl::ExecutorImpl(const Pose& initialPose) noexcept : poseHandler{initi
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
-    static const CmderFactory factory;
+    const auto& factory = Singleton<CmderFactory>::Instance();
     const auto handlers = factory.GetCmders(commands);
 
     for (const auto& handler : handlers) {
