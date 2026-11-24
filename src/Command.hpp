@@ -4,18 +4,11 @@
 
 namespace adas
 {
-class ICommand
+
+class MoveCommand final
 {
 public:
-    virtual ~ICommand() = default;
-
-    virtual void DoOperate(PoseHandler& state) const noexcept = 0;
-};
-
-class MoveCommand final : public ICommand
-{
-public:
-    void DoOperate(PoseHandler& state) const noexcept override
+    void operator()(PoseHandler& state) const noexcept
     {
         if (state.IsFast()) {
             state.Move();
@@ -25,10 +18,10 @@ public:
     }
 };
 
-class TurnLeftCommand final : public ICommand
+class TurnLeftCommand final
 {
 public:
-    void DoOperate(PoseHandler& state) const noexcept override
+    void operator()(PoseHandler& state) const noexcept
     {
         if (state.IsFast()) {
             state.Move();
@@ -42,10 +35,10 @@ public:
     }
 };
 
-class TurnRightCommand final : public ICommand
+class TurnRightCommand final
 {
 public:
-    void DoOperate(PoseHandler& state) const noexcept override
+    void operator()(PoseHandler& state) const noexcept
     {
         if (state.IsFast()) {
             state.Move();
@@ -59,18 +52,18 @@ public:
     }
 };
 
-class FastCommand final : public ICommand
+class FastCommand final
 {
 public:
-    void DoOperate(PoseHandler& state) const noexcept override
+    void operator()(PoseHandler& state) const noexcept
     {
         state.Fast();
     }
 };
-class ReverseCommand final : public ICommand
+class ReverseCommand final
 {
 public:
-    void DoOperate(PoseHandler& state) const noexcept override
+    void operator()(PoseHandler& state) const noexcept
     {
         state.Reverse();
     }
