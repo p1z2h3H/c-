@@ -1,22 +1,49 @@
 # C++ 课程实验
 
-提交人 彭彰航（2025080910013）
+彭彰航（2025080910013） · [下载课程提交包](./2025080910013_彭彰航.zip)
 
-[原始提交包](./2025080910013_彭彰航.zip)。以下各阶段均可独立构建，表中的测试数量来自 Windows MinGW 构建后的实际运行。
+## 开发过程
 
-| 阶段 | 实现内容 | 通过的测试数 |
-| --- | --- | ---: |
-| [实验1-高质量编程基础](./实验1-高质量编程基础/代码说明.txt) | 基本指令、初始化和查询 | 16 |
-| [实验2-面向对象编程](./实验2-面向对象编程/代码说明.txt) | 指令类与加速 | 22 |
-| [实验3-1-面向对象编程](./实验3-1-面向对象编程/代码说明.txt) | 状态抽离与表驱动 | 22 |
-| [实验3-2-面向函数式编程](./实验3-2-面向函数式编程/代码说明.txt) | 函数对象、倒车和加速倒车 | 55 |
-| [综合实验](./综合实验/代码说明.txt) | 掉头、原子动作编排、跑车和 Bus | 177 |
+| 实验 | 提交记录 | 完成内容 |
+| --- | --- | --- |
+| 实验 1 | [实验 1 提交](https://github.com/p1z2h3H/c-/commits/history/lab1/) | 实现位姿初始化和查询，支持前进、左转、右转和批量指令，补充批量与空指令测试。 |
+| 实验 2 | [实验 2 提交](https://github.com/p1z2h3H/c-/commits/history/lab2/) | 抽取移动与转向动作，通过 `ICommand` 分派指令，再增加加速开关与持续状态测试。 |
+| 实验 3-1 | [本人操作记录](https://github.com/p1z2h3H/c-/commits/practice/lab3-1/) | 抽离位姿状态和指令类，改为表驱动，分别抽取坐标与朝向。 |
+| 实验 3-2 | [本人操作记录](https://github.com/p1z2h3H/c-/commits/practice/lab3-2/) | 先写倒车测试，再实现倒车与转向，改用函数对象分派指令。 |
+| 综合实验 | [本人操作记录](https://github.com/p1z2h3H/c-/commits/practice/lab4/) | 实现掉头、原子动作编排、指令工厂与单例，分层整理工程，扩展跑车和 Bus。 |
 
-每个阶段包含 `include/`、`src/`、`tests/`、构建脚本和代码说明。
+### 实验 3-1
 
-## 构建与验收
+1. 从 `ExecutorImpl` 抽出管理位姿的 `PoseHandler`。[提交](https://github.com/p1z2h3H/c-/commit/03c2162)
+2. 将指令类移到 `Command.hpp`，随后用查找表分派指令。[指令类](https://github.com/p1z2h3H/c-/commit/c6e33d8) · [表驱动](https://github.com/p1z2h3H/c-/commit/ff68a63)
+3. 分别抽取 `Point` 表示坐标、`Direction` 表示朝向。[坐标](https://github.com/p1z2h3H/c-/commit/edc1ade) · [朝向](https://github.com/p1z2h3H/c-/commit/da9fd9c)
 
-如使用 Windows MinGW，请把要测试的阶段复制到全英文路径，再在该阶段的根目录运行：
+### 实验 3-2
+
+1. 为倒车移动增加测试，再实现 `B` 开关和后退。[测试](https://github.com/p1z2h3H/c-/commit/90ae31d) · [实现](https://github.com/p1z2h3H/c-/commit/c62d783)
+2. 为普通倒车和加速倒车的转向增加测试，再实现倒车状态下的反向转向。[测试](https://github.com/p1z2h3H/c-/commit/895676e) · [实现](https://github.com/p1z2h3H/c-/commit/79ff87e)
+3. 改用可调用的指令对象，补充验证加速与倒车开关独立且跨批次生效的测试。[函数对象](https://github.com/p1z2h3H/c-/commit/a1dc86e) · [状态测试](https://github.com/p1z2h3H/c-/commit/06a09a0)
+
+### 综合实验
+
+1. 先写各驾驶状态下的掉头测试，再实现 `TR`，随后把掉头改成有序的动作组合。[测试](https://github.com/p1z2h3H/c-/commit/57f8444) · [实现](https://github.com/p1z2h3H/c-/commit/491f583) · [动作编排](https://github.com/p1z2h3H/c-/commit/b84665d)
+2. 补齐八种原子动作，让指令通过动作序列执行，抽取指令工厂并接入模板单例。[原子动作](https://github.com/p1z2h3H/c-/commit/ff86746) · [指令编排](https://github.com/p1z2h3H/c-/commit/54bc776) · [工厂](https://github.com/p1z2h3H/c-/commit/67f25db) · [单例](https://github.com/p1z2h3H/c-/commit/2a4aef8)
+3. 补充相邻 `TRTR` 的测试，按模块整理工程，并在创建执行器时传入车型。[掉头测试](https://github.com/p1z2h3H/c-/commit/3057bab) · [模块分层](https://github.com/p1z2h3H/c-/commit/eebc281) · [车型参数](https://github.com/p1z2h3H/c-/commit/56ce41c)
+4. 为跑车和 Bus 编写四种驾驶状态的测试，再实现两种车型的运动规则。[测试](https://github.com/p1z2h3H/c-/commit/aa170a4) · [实现](https://github.com/p1z2h3H/c-/commit/8d40ea9)
+
+## 提交工程与构建
+
+`main` 保存五份可独立构建的实验工程。下表是提交工程在 Windows MinGW 下记录的 GoogleTest 通过数。综合实验的本人操作分支另有 28 项 GoogleTest 通过记录。
+
+| 提交工程 | GoogleTest 通过数 |
+| --- | ---: |
+| [实验 1](./实验1-高质量编程基础/代码说明.txt) | 16 |
+| [实验 2](./实验2-面向对象编程/代码说明.txt) | 22 |
+| [实验 3-1](./实验3-1-面向对象编程/代码说明.txt) | 22 |
+| [实验 3-2](./实验3-2-面向函数式编程/代码说明.txt) | 55 |
+| [综合实验](./综合实验/代码说明.txt) | 177 |
+
+使用 Windows MinGW 时，将要测试的工程复制到全英文路径，在工程根目录运行以下命令。
 
 ```powershell
 cmake -S . -B build -G "MinGW Makefiles"
@@ -24,28 +51,4 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-也可运行 `script\build_and_run.bat`。配置、编译或测试失败时，脚本会返回非零退出码。使用 Linux 时，运行 `bash script/build_and_run.sh`。
-
-## 开发记录
-
-以下练习分支记录了彭彰航亲手完成的实验3-1、实验3-2和综合实验。可以按阶段逐条查看测试、实现与重构提交。
-
-| 阶段 | 本人操作记录 | 主要步骤 |
-| --- | --- | --- |
-| 实验3-1 | [practice/lab3-1](https://github.com/p1z2h3H/c-/commits/practice/lab3-1/) | 状态抽离、拆出指令类、表驱动、坐标与方向抽象 |
-| 实验3-2 | [practice/lab3-2](https://github.com/p1z2h3H/c-/commits/practice/lab3-2/) | 倒车和倒车转向先提交测试再实现，改用函数对象 |
-| 综合实验 | [practice/lab4](https://github.com/p1z2h3H/c-/commits/practice/lab4/) | 掉头、原子动作编排、指令工厂、单例、工程分层和车型扩展 |
-
-练习分支的综合实验在 Windows MinGW 下通过 28 项 GoogleTest 和 CTest。`main` 上方的测试数量对应打包提交的工程。
-
-以下是各阶段的原始提交记录。记录来自各阶段使用的本地 Git 仓库，导入时保留了文件快照、提交说明、时间与父子关系，公开邮箱使用 GitHub 的 noreply 地址。
-
-| 阶段 | 提交历史 | 可核验的开发过程 |
-| --- | --- | --- |
-| 实验1 | [history/lab1](https://github.com/p1z2h3H/c-/commits/history/lab1/) | 初始化、移动和转向分别提交测试及实现，随后增加批量与空指令测试。 |
-| 实验2 | [history/lab2](https://github.com/p1z2h3H/c-/commits/history/lab2/) | 抽取基础动作和指令类，引入多态。加速测试与功能实现分开提交。 |
-| 实验3-1 | [history/lab3-1](https://github.com/p1z2h3H/c-/commits/history/lab3-1/) | 一次阶段提交，记录状态抽离和表驱动重构。 |
-| 实验3-2 | [history/lab3-2](https://github.com/p1z2h3H/c-/commits/history/lab3-2/) | 先提交倒车测试，再继承状态抽象，随后实现函数对象与倒车行为。 |
-| 综合实验 | [history/lab4](https://github.com/p1z2h3H/c-/commits/history/lab4/) | 一次阶段提交，记录掉头、车型行为和原子动作编排。 |
-
-`main` 保存按提交样本组织的五份工程和压缩包，后续构建修订也记录在 `main`。
+也可以在提交工程根目录运行 `script\build_and_run.bat`。使用 Linux 时运行 `bash script/build_and_run.sh`。
