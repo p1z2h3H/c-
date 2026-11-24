@@ -9,69 +9,10 @@ Executor* Executor::NewExecutor(const Pose& pose) noexcept
 {
     return new (std::nothrow) ExecutorImpl(pose);
 }
-ExecutorImpl::ExecutorImpl(const Pose& initialPose) noexcept : pose{initialPose}
+ExecutorImpl::ExecutorImpl(const Pose& initialPose) noexcept : poseHandler{initialPose}
 {
-}
-void ExecutorImpl::Move() noexcept
-{
-    switch (pose.heading) {
-    case 'N':
-        ++pose.y;
-        break;
-    case 'S':
-        --pose.y;
-        break;
-    case 'E':
-        ++pose.x;
-        break;
-    case 'W':
-        --pose.x;
-        break;
-    }
-}
-void ExecutorImpl::TurnLeft() noexcept
-{
-    switch (pose.heading) {
-    case 'N':
-        pose.heading = 'W';
-        break;
-    case 'W':
-        pose.heading = 'S';
-        break;
-    case 'S':
-        pose.heading = 'E';
-        break;
-    case 'E':
-        pose.heading = 'N';
-        break;
-    }
-}
-void ExecutorImpl::TurnRight() noexcept
-{
-    switch (pose.heading) {
-    case 'N':
-        pose.heading = 'E';
-        break;
-    case 'E':
-        pose.heading = 'S';
-        break;
-    case 'S':
-        pose.heading = 'W';
-        break;
-    case 'W':
-        pose.heading = 'N';
-        break;
-    }
-}
-void ExecutorImpl::Fast() noexcept
-{
-    fast = !fast;
 }
 
-bool ExecutorImpl::IsFast() const noexcept
-{
-    return fast;
-}
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
     for (const char command : commands) {
@@ -88,12 +29,12 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
         }
 
         if (cmder) {
-            cmder->DoOperate(*this);
+            cmder->DoOperate(poseHandler);
         }
     }
 }
 Pose ExecutorImpl::Query() const noexcept
 {
-    return pose;
+    return poseHandler.Query();
 }
 }  // namespace adas
