@@ -2,9 +2,9 @@
 
 #include <memory>
 
+#include "CmderFactory.hpp"
 #include "Executor.hpp"
 #include "PoseEq.hpp"
-
 namespace adas
 {
 TEST(ExecutorTurnRoundTest, should_turn_round_in_all_drive_modes)
@@ -28,5 +28,20 @@ TEST(ExecutorTurnRoundTest, should_turn_round_in_all_drive_modes)
 
         EXPECT_EQ(testCase.expected, executor->Query());
     }
+}
+TEST(ExecutorTurnRoundTest, should_execute_both_adjacent_turn_round_commands)
+{
+    const CmderFactory factory;
+    const auto handlers = factory.GetCmders("TRTR");
+    ASSERT_EQ(2U, handlers.size());
+
+    PoseHandler state({0, 0, 'E'});
+    handlers[0](state).DoOperate(state);
+    const Pose afterFirst{0, 1, 'W'};
+    EXPECT_EQ(afterFirst, state.Query());
+
+    handlers[1](state).DoOperate(state);
+    const Pose afterSecond{0, 0, 'E'};
+    EXPECT_EQ(afterSecond, state.Query());
 }
 }  // namespace adas
