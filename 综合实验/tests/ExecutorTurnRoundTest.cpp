@@ -6,6 +6,8 @@
 
 #include "Executor.hpp"
 #include "PoseEq.hpp"
+#include "command/CmderFactory.hpp"
+#include "core/PoseHandler.hpp"
 
 namespace adas {
 
@@ -36,11 +38,20 @@ TEST(ExecutorTurnRoundTest, should_follow_TR_rules_for_every_vehicle_state_and_h
 
 TEST(ExecutorTurnRoundTest, should_parse_adjacent_TR_commands_as_two_complete_commands)
 {
-    std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'E'}));
-    ASSERT_NE(nullptr, executor.get());
-    executor->Execute("TRTR");
-    const Pose expected{0, 0, 'E'};
-    EXPECT_EQ(expected, executor->Query());
+    const CmderFactory factory;
+    const auto commands = factory.GetCmders("TRTR");
+    ASSERT_EQ(2U, commands.size());
+
+    PoseHandler state({0, 0, 'E'});
+    auto command = commands.begin();
+    (*command)(state).DoOperate(state);
+    const Pose afterFirst{0, 1, 'W'};
+    EXPECT_EQ(afterFirst, state.Query());
+
+    ++command;
+    (*command)(state).DoOperate(state);
+    const Pose afterSecond{0, 0, 'E'};
+    EXPECT_EQ(afterSecond, state.Query());
 }
 
 TEST(ExecutorTurnRoundTest, should_keep_reverse_state_after_TR)
