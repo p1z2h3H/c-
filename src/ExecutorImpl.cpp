@@ -2,6 +2,9 @@
 
 #include <memory>
 #include <new>
+#include <unordered_map>
+
+#include "Command.hpp"
 
 namespace adas
 {
@@ -9,91 +12,29 @@ Executor* Executor::NewExecutor(const Pose& pose) noexcept
 {
     return new (std::nothrow) ExecutorImpl(pose);
 }
-ExecutorImpl::ExecutorImpl(const Pose& initialPose) noexcept : pose{initialPose}
+
+ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : poseHandler(pose)
 {
-}
-void ExecutorImpl::Move() noexcept
-{
-    switch (pose.heading) {
-    case 'N':
-        ++pose.y;
-        break;
-    case 'S':
-        --pose.y;
-        break;
-    case 'E':
-        ++pose.x;
-        break;
-    case 'W':
-        --pose.x;
-        break;
-    }
-}
-void ExecutorImpl::TurnLeft() noexcept
-{
-    switch (pose.heading) {
-    case 'N':
-        pose.heading = 'W';
-        break;
-    case 'W':
-        pose.heading = 'S';
-        break;
-    case 'S':
-        pose.heading = 'E';
-        break;
-    case 'E':
-        pose.heading = 'N';
-        break;
-    }
-}
-void ExecutorImpl::TurnRight() noexcept
-{
-    switch (pose.heading) {
-    case 'N':
-        pose.heading = 'E';
-        break;
-    case 'E':
-        pose.heading = 'S';
-        break;
-    case 'S':
-        pose.heading = 'W';
-        break;
-    case 'W':
-        pose.heading = 'N';
-        break;
-    }
-}
-void ExecutorImpl::Fast() noexcept
-{
-    fast = !fast;
 }
 
-bool ExecutorImpl::IsFast() const noexcept
-{
-    return fast;
-}
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
+    std::unordered_map<char, std::unique_ptr<ICommand>> commandMap;
+    commandMap.emplace('M', std::make_unique<MoveCommand>());
+    commandMap.emplace('L', std::make_unique<TurnLeftCommand>());
+    commandMap.emplace('R', std::make_unique<TurnRightCommand>());
+    commandMap.emplace('F', std::make_unique<FastCommand>());
+
     for (const char command : commands) {
-        std::unique_ptr<ICommand> cmder;
-
-        if (command == 'M') {
-            cmder = std::make_unique<MoveCommand>();
-        } else if (command == 'L') {
-            cmder = std::make_unique<TurnLeftCommand>();
-        } else if (command == 'R') {
-            cmder = std::make_unique<TurnRightCommand>();
-        } else if (command == 'F') {
-            cmder = std::make_unique<FastCommand>();
-        }
-
-        if (cmder) {
-            cmder->DoOperate(*this);
+        const auto found = commandMap.find(command);
+        if (found != commandMap.end()) {
+            found->second->DoOperate(poseHandler);
         }
     }
 }
+
 Pose ExecutorImpl::Query() const noexcept
 {
-    return pose;
+    return poseHandler.Query();
 }
 }  // namespace adas
