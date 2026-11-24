@@ -1,12 +1,14 @@
 @echo off
-pushd .
+setlocal
+pushd "%~dp0.." || exit /b 1
 
-if not exist build (
-     md build
+cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug
+if errorlevel 1 (
+    popd
+    exit /b 1
 )
 
-cd build
-cmake -G"MinGW Makefiles" ..
-mingw32-make.exe
-
+cmake --build build --parallel 4
+set "buildExit=%errorlevel%"
 popd
+exit /b %buildExit%

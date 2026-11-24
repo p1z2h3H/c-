@@ -13,6 +13,13 @@ Point& Point::operator+=(const Point& other) noexcept
     return *this;
 }
 
+Point& Point::operator-=(const Point& other) noexcept
+{
+    x -= other.x;
+    y -= other.y;
+    return *this;
+}
+
 std::int32_t Point::GetX() const noexcept
 {
     return x;

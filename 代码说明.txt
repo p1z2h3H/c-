@@ -1,83 +1,83 @@
-实验2-面向对象编程
+实验3-2-面向函数式编程
 作者 彭彰航
 
 一、实验内容
 
-本实验在实验1的基础上，使用封装、继承和多态整理智能车执行器的指令处理代码，并实现加速指令F。程序使用C++17，采用CMake构建，使用GoogleTest进行单元测试，通过Git记录重构和功能开发过程。
+本阶段继承实验3-1的位置、方向和状态封装，使用函数对象及std::function实现表驱动指令分派，并完成倒车指令B、倒车与加速叠加的行为和测试。
 
-保留的基本功能包括默认初始化、指定初始化、状态查询、M前进、L左转、R右转及批量指令执行。
+程序继续支持默认与指定初始化、状态查询、批量指令、M前进、L左转、R右转和F加速。输入均按需求保证合法，整个执行过程中坐标在32位整数范围内。
 
-二、文件结构
+二、代码组织
 
-include/Executor.hpp
-定义车辆状态Pose和执行器抽象接口Executor，提供创建、执行指令和查询状态的接口。
+include/Executor.hpp定义公开接口和Pose结构体。
 
-src/ExecutorImpl.hpp
-声明ExecutorImpl实现类、基础动作函数、加速状态函数，以及嵌套的ICommand抽象基类和四个具体指令类。对象成员pose保存位置和朝向，fast保存加速状态。
+src/Point.hpp、src/Point.cpp封装32位坐标，提供位置向量的加法和减法赋值。
 
-src/ExecutorImpl.cpp
-实现执行器创建、初始化、基础动作、加速状态切换、指令分派和状态查询。
+src/Direction.hpp、src/Direction.cpp使用按N、E、S、W排列的固定方向表，提供单位位移以及左右90度方向转换。
 
-tests/ExecutorTest.cpp
-保存实验1的16个测试，检查初始化、四个方向的移动与转向、批量指令和空指令。
+src/PoseHandler.hpp、src/PoseHandler.cpp保存每辆车的位置、朝向、加速和倒车状态，并提供单格移动、转向、状态切换和查询。
 
-tests/ExecutorFastTest.cpp
-保存6个加速相关测试，检查加速移动、加速转向、状态取消及多次调用之间的状态保持。
+src/Command.hpp定义MoveCommand、TurnLeftCommand、TurnRightCommand、FastCommand和ReverseCommand五种函数对象。每个类通过operator()(PoseHandler&)提供统一调用方式。
 
-tests/PoseEq.hpp、tests/PoseEq.cpp
-分别声明和定义Pose的相等比较运算符，供两个测试文件共同使用。
+src/ExecutorImpl.hpp、src/ExecutorImpl.cpp实现公开接口，维护PoseHandler并查表执行指令。
 
-CMakeLists.txt、src/CMakeLists.txt、tests/CMakeLists.txt
-配置C++17、功能库、测试程序和CTest测试目标。script目录保存课程构建与运行脚本，tests/googletest目录使用课程提供的GoogleTest框架。
+tests/ExecutorTest.cpp保存实验1的16个测试，tests/ExecutorFastTest.cpp保存实验2的6个加速测试，tests/ExecutorReverseTest.cpp新增33个倒车及组合状态测试。tests/PoseEq.hpp和tests/PoseEq.cpp提供共用的状态相等比较。
 
-三、封装、继承与多态
+根目录及src、tests目录中的CMakeLists.txt负责构建功能库与测试程序。script目录保存Windows构建与运行入口，tests/googletest使用课程提供的框架版本。
 
-首先将原Execute函数中的具体动作抽取为Move、TurnLeft、TurnRight三个私有成员函数。Move完成单格移动，TurnLeft和TurnRight分别完成90度转向。
+三、函数对象与表驱动
 
-随后为三种指令建立MoveCommand、TurnLeftCommand和TurnRightCommand类，并增加共同父类ICommand。ICommand声明纯虚函数DoOperate，各具体指令类通过override提供自己的实现。FastCommand也继承ICommand，负责切换加速状态。
+五种指令类通过重载operator()成为可调用对象，std::function<void(PoseHandler&)>统一保存这些对象，unordered_map将M、L、R、F、B字符映射到对应操作。
 
-Execute逐个读取指令字符，创建对应的指令对象，交给std::unique_ptr<ICommand>管理，再统一调用cmder->DoOperate(*this)。虚函数机制根据实际指令对象选择对应实现，*this将当前执行器对象传入指令函数。
+Execute按顺序查询指令表，将当前执行器持有的PoseHandler传给找到的函数对象。指令表为静态常量，只构建一次，表中保存的指令对象没有车辆状态。车辆的位置和F、B状态均保存在各自的PoseHandler中。
 
-ICommand提供虚析构函数，保证通过父类接口释放指令对象时正确执行析构过程。四个指令类作为ExecutorImpl的嵌套类，通过传入的执行器引用访问其私有动作函数。
+std::function按值保存指令对象，调用所需的车辆状态通过参数传入。生产代码中的指令对象不捕获局部变量，也不保存指向临时指令对象的引用。
 
-四、加速功能实现
+四、状态与动作规则
 
-fast是执行器的布尔成员，初始值为false。Fast函数使用fast = !fast切换状态，IsFast函数返回当前状态。F指令本身只切换状态，位置和朝向保持原值。
+fast和reverse均为布尔成员，初始值为false。Fast和Reverse分别通过逻辑取反切换对应状态，两种状态能够独立开启、取消，并跨多次Execute调用保留。
 
-普通状态下，M前进1格，L左转90度，R右转90度。
+Forward和Backward分别沿车辆朝向前进或后退一格，保持朝向。Move根据reverse状态选择Forward或Backward。TurnLeft和TurnRight分别执行纯90度左转和右转。
 
-加速状态下，MoveCommand连续调用两次Move，实现逐格前进2格。TurnLeftCommand先调用一次Move，再调用TurnLeft。TurnRightCommand先调用一次Move，再调用TurnRight。加速转向中的移动沿转向前的朝向进行。
+普通状态下，M前进一格，L左转，R右转。
 
-再次收到F后取消加速。由于fast由执行器对象保存，同一个对象在多次Execute调用之间能够保留加速状态。
+加速状态下，M连续执行两次Move，L先Move再左转，R先Move再右转。
 
-五、测试设计与结果
+倒车状态下，M后退一格，L右转，R左转。
 
-测试使用独立的执行器对象，通过ASSERT_NE检查创建结果，通过ASSERT_EQ比较预期和实际Pose。两个测试文件包含PoseEq.hpp，比较函数集中定义在PoseEq.cpp中。
+加速倒车状态下，M逐格后退两次，L先后退一格再右转，R先后退一格再左转。指令对象先完成加速状态要求的移动，再根据倒车状态决定转向，因此动作顺序符合需求。
 
-共有22个测试，包括实验1保留的16个测试和以下6个加速测试。
+五、测试与验证结果
 
-（1）从(0,0,E)执行FM，预期为(2,0,E)。
-（2）从(0,0,E)执行FL，预期为(1,0,N)。
-（3）从(0,0,E)执行FR，预期为(1,0,S)。
-（4）从默认状态执行FFM，预期为(0,1,N)。
-（5）从(0,0,E)先单独执行F，查询结果保持(0,0,E)，再通过第二次Execute调用执行M，预期为(2,0,E)。
-（6）从(0,0,E)执行FMFM，先加速移动2格，再取消加速并移动1格，预期为(3,0,E)。
+原有22个测试用于回归初始化、基本控制和加速行为。新增倒车测试包含四种朝向下B与B+F状态的M、L、R共24项，以及以下9项状态和顺序检查。
 
-本次检查在Windows环境下编译成功，22个GoogleTest测试全部通过，CTest中的training_main目标通过。
+（1）单独B保持位置和朝向。
+（2）跨Execute调用保留倒车状态。
+（3）连续两次B取消倒车。
+（4）倒车移动后取消B，再向前移动。
+（5）取消F后保留B。
+（6）取消B后保留F。
+（7）BF与FB的叠加结果一致。
+（8）两个执行器的状态相互独立。
+（9）组合指令BFLMR按顺序执行，从(0,0,E)得到(-1,3,E)。
+
+四朝向测试使用GoogleTest参数化机制，将输入和预期状态集中列为数据表。新增测试先在未实现B的版本上运行，得到24项通过、31项失败；完成实现后，55项GoogleTest用例全部通过，CTest中的training_main测试目标通过。
 
 六、构建与运行
 
-开发环境采用Windows、MinGW-w64、CMake 3.31.8、Git和VS Code。将工程放在全英文路径，在包含根目录CMakeLists.txt的文件夹中打开PowerShell，并确保编译器、Make及CMake已加入PATH。
+开发环境为Windows、MinGW-w64、CMake 3.31.8及C++17。将工程放在全英文路径，并确保g++、mingw32-make与cmake位于PATH中。
 
-使用课程脚本编译并运行测试。
+在工程根目录的PowerShell中运行以下命令。
 
 .\script\build_and_run.bat
 
-也可以依次执行以下命令，每条成功后再执行下一条。
+也可以逐条运行，每条成功后再执行下一条。
 
-cmake -S . -B build -G "MinGW Makefiles"
-cmake --build build
+cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel 4
 .\build\tests\training_main.exe
 ctest --test-dir build --output-on-failure
 
-开发时先逐步抽取动作函数，再建立指令类和继承关系，每阶段通过已有测试检查行为。加速功能先提交测试，再提交实现，最后补充状态持续与取消的测试。
+七、阶段开发记录
+
+本阶段先提交倒车需求测试，再继承实验3-1的状态与方向抽象，随后实现函数对象指令层和B状态组合。Git记录保留各阶段的修改，便于对照测试和功能实现。

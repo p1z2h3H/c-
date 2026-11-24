@@ -9,7 +9,21 @@ PoseHandler::PoseHandler(const Pose& pose) noexcept
 
 void PoseHandler::Move() noexcept
 {
+    if (reverse) {
+        Backward();
+    } else {
+        Forward();
+    }
+}
+
+void PoseHandler::Forward() noexcept
+{
     point += facing->Move();
+}
+
+void PoseHandler::Backward() noexcept
+{
+    point -= facing->Move();
 }
 
 void PoseHandler::TurnLeft() noexcept
@@ -30,6 +44,16 @@ void PoseHandler::Fast() noexcept
 bool PoseHandler::IsFast() const noexcept
 {
     return fast;
+}
+
+void PoseHandler::Reverse() noexcept
+{
+    reverse = !reverse;
+}
+
+bool PoseHandler::IsReverse() const noexcept
+{
+    return reverse;
 }
 
 Pose PoseHandler::Query() const noexcept

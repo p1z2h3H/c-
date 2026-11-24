@@ -14,15 +14,20 @@ public:
     PoseHandler& operator=(const PoseHandler&) = delete;
 
     void Move() noexcept;
+    void Forward() noexcept;
+    void Backward() noexcept;
     void TurnLeft() noexcept;
     void TurnRight() noexcept;
     void Fast() noexcept;
     bool IsFast() const noexcept;
+    void Reverse() noexcept;
+    bool IsReverse() const noexcept;
     Pose Query() const noexcept;
 
 private:
     Point point;
     const Direction* facing;
     bool fast{false};
+    bool reverse{false};
 };
 }  // namespace adas
