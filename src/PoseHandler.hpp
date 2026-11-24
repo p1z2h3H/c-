@@ -11,6 +11,7 @@ public:
     Pose Query() const noexcept;
     void Move() noexcept;
     void Forward() noexcept;
+    void Backward() noexcept;
     void TurnLeft() noexcept;
     void TurnRight() noexcept;
     void Fast() noexcept;

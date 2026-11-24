@@ -9,7 +9,13 @@ namespace adas
 {
 enum class ActionType {
     Forward,
+    Backward,
     TurnLeft,
+    TurnRight,
+    ReverseTurnLeft,
+    ReverseTurnRight,
+    ToggleFast,
+    ToggleReverse,
 };
 
 class ActionGroup
@@ -26,8 +32,22 @@ public:
             case ActionType::Forward:
                 state.Forward();
                 break;
+            case ActionType::Backward:
+                state.Backward();
+                break;
             case ActionType::TurnLeft:
+            case ActionType::ReverseTurnRight:
                 state.TurnLeft();
+                break;
+            case ActionType::TurnRight:
+            case ActionType::ReverseTurnLeft:
+                state.TurnRight();
+                break;
+            case ActionType::ToggleFast:
+                state.Fast();
+                break;
+            case ActionType::ToggleReverse:
+                state.Reverse();
                 break;
             }
         }
