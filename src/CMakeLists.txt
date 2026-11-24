@@ -1,11 +1,11 @@
-SET(INCLUDE ${CMAKE_SOURCE_DIR}/include)
+add_library(training
+    core/PoseHandler.cpp
+    executor/ExecutorImpl.cpp
+)
 
-FILE(GLOB SOURCE "*.cpp")
-LIST(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp)
-LIST(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+target_include_directories(training
+    PUBLIC "${CMAKE_SOURCE_DIR}/include"
+    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}"
+)
 
-ADD_COMPILE_OPTIONS("-Wall")
-ADD_COMPILE_OPTIONS("-Werror")
-ADD_LIBRARY(training ${SOURCE})
-
-TARGET_INCLUDE_DIRECTORIES(training PUBLIC "${INCLUDE}")
+target_compile_options(training PRIVATE -Wall -Werror)

@@ -2,8 +2,8 @@
 
 #include <new>
 
-#include "CmderFactory.hpp"
-#include "Singleton.hpp"
+#include "command/CmderFactory.hpp"
+#include "common/Singleton.hpp"
 
 namespace adas
 {
