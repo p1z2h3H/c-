@@ -28,7 +28,7 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
         const char command = commands[index];
 
         if (command == 'T' && index + 1 < commands.size() && commands[index + 1] == 'R') {
-            TurnRoundCommand{}(poseHandler);
+            TurnRoundCommand{}(poseHandler).DoOperate(poseHandler);
             ++index;
             continue;
         }

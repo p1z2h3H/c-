@@ -1,5 +1,5 @@
 #pragma once
-
+#include "ActionGroup.hpp"
 #include "PoseHandler.hpp"
 
 namespace adas
@@ -68,18 +68,17 @@ public:
         state.Reverse();
     }
 };
+
 class TurnRoundCommand final
 {
 public:
-    void operator()(PoseHandler& state) const noexcept
+    ActionGroup operator()(const PoseHandler& state) const
     {
         if (state.IsFast()) {
-            state.Forward();
+            return ActionGroup{ActionType::Forward, ActionType::TurnLeft, ActionType::Forward, ActionType::TurnLeft};
         }
 
-        state.TurnLeft();
-        state.Forward();
-        state.TurnLeft();
+        return ActionGroup{ActionType::TurnLeft, ActionType::Forward, ActionType::TurnLeft};
     }
 };
 }  // namespace adas
