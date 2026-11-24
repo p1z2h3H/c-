@@ -21,6 +21,12 @@ enum class ActionType {
 class ActionGroup
 {
 public:
+    ActionGroup() = default;
+
+    void Add(ActionType action)
+    {
+        actions.push_back(action);
+    }
     explicit ActionGroup(std::initializer_list<ActionType> actions) : actions{actions}
     {
     }
