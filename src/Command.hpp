@@ -59,4 +59,12 @@ public:
         state.Fast();
     }
 };
+class ReverseCommand final : public ICommand
+{
+public:
+    void DoOperate(PoseHandler& state) const noexcept override
+    {
+        state.Reverse();
+    }
+};
 }  // namespace adas

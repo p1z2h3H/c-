@@ -17,7 +17,12 @@ public:
         y += other.y;
         return *this;
     }
-
+    Point& operator-=(const Point& other) noexcept
+    {
+        x -= other.x;
+        y -= other.y;
+        return *this;
+    }
     std::int32_t GetX() const noexcept
     {
         return x;

@@ -14,10 +14,12 @@ public:
     void TurnRight() noexcept;
     void Fast() noexcept;
     bool IsFast() const noexcept;
+    void Reverse() noexcept;
 
 private:
     Point point;
     Direction direction;
     bool fast{false};
+    bool reverse{false};
 };
 }  // namespace adas

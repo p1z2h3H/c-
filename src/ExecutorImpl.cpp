@@ -23,7 +23,7 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
     commandMap.emplace('L', std::make_unique<TurnLeftCommand>());
     commandMap.emplace('R', std::make_unique<TurnRightCommand>());
     commandMap.emplace('F', std::make_unique<FastCommand>());
-
+    commandMap.emplace('B', std::make_unique<ReverseCommand>());
     for (const char command : commands) {
         const auto found = commandMap.find(command);
         if (found != commandMap.end()) {
