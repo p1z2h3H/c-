@@ -6,12 +6,14 @@
 
 ## 开发过程
 
+五个实验均由我亲自开发。下表的「逐步提交」链接对应我在各阶段的实际开发记录。
+
 最终交付位于 `main` 的五个实验目录和页面顶部的 ZIP。下表同时给出过程分支和可用于核对提交版的源码节点。
 
 | 实验 | 逐步提交 | 提交版源码节点 | 完成内容 |
 | --- | --- | --- | --- |
-| 实验 1 | [实验 1 提交](https://github.com/p1z2h3H/c-/commits/history/lab1/) | [`07214cf`](https://github.com/p1z2h3H/c-/commit/07214cf) | 实现位姿初始化和查询，支持前进、左转、右转和批量指令，补充批量与空指令测试。 |
-| 实验 2 | [实验 2 提交](https://github.com/p1z2h3H/c-/commits/history/lab2/) | [`f9a392d`](https://github.com/p1z2h3H/c-/commit/f9a392d) | 分别抽取移动与左右转成员函数，再集中封装三个指令类，通过 `ICommand` 分派。随后增加加速开关与持续状态测试。 |
+| 实验 1 | [本人操作记录](https://github.com/p1z2h3H/c-/commits/history/lab1/) | [`07214cf`](https://github.com/p1z2h3H/c-/commit/07214cf) | 实现位姿初始化和查询，支持前进、左转、右转和批量指令，补充批量与空指令测试。 |
+| 实验 2 | [本人操作记录](https://github.com/p1z2h3H/c-/commits/history/lab2/) | [`f9a392d`](https://github.com/p1z2h3H/c-/commit/f9a392d) | 分别抽取移动与左右转成员函数，再集中封装三个指令类，通过 `ICommand` 分派。随后增加加速开关与持续状态测试。 |
 | 实验 3-1 | [本人操作记录](https://github.com/p1z2h3H/c-/commits/practice/lab3-1/) | [`5e3cc6a`](https://github.com/p1z2h3H/c-/commit/5e3cc6a) | 抽离位姿状态和指令类，改为表驱动，分别抽取坐标与朝向。 |
 | 实验 3-2 | [本人操作记录](https://github.com/p1z2h3H/c-/commits/practice/lab3-2/) | [`8157010`](https://github.com/p1z2h3H/c-/commit/8157010) | 先写倒车测试，再实现倒车与转向，改用函数对象分派指令。 |
 | 综合实验 | [本人操作记录](https://github.com/p1z2h3H/c-/commits/practice/lab4/) | [`6f5a3c0` 阶段快照](https://github.com/p1z2h3H/c-/commit/6f5a3c0)，随后在 `main` [补充相邻掉头测试](https://github.com/p1z2h3H/c-/commit/a96ce75)并[修复工厂拷贝约束、更新提交包](https://github.com/p1z2h3H/c-/commit/a40fcbf) | 实现掉头、原子动作编排、指令工厂与单例，分层整理工程，扩展跑车和 Bus。 |
