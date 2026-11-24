@@ -15,6 +15,10 @@ using CmderList = std::list<Cmder>;
 
 class CmderFactory final {
 public:
+    CmderFactory() = default;
+    CmderFactory(const CmderFactory&) = delete;
+    CmderFactory& operator=(const CmderFactory&) = delete;
+
     CmderList GetCmders(const std::string& commands) const;
 
 private:
