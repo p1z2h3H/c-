@@ -2,8 +2,8 @@
 
 namespace adas
 {
-PoseHandler::PoseHandler(const Pose& initialPose) noexcept
-    : point{initialPose.x, initialPose.y}, direction{initialPose.heading}
+PoseHandler::PoseHandler(const Pose& initialPose, VehicleType type) noexcept
+    : point{initialPose.x, initialPose.y}, direction{initialPose.heading}, vehicleType{type}
 {
 }
 
