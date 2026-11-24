@@ -1,7 +1,7 @@
 #pragma once
+#include "Direction.hpp"
 #include "Executor.hpp"
 #include "Point.hpp"
-
 namespace adas
 {
 class PoseHandler
@@ -17,7 +17,7 @@ public:
 
 private:
     Point point;
-    char heading;
+    Direction direction;
     bool fast{false};
 };
 }  // namespace adas
