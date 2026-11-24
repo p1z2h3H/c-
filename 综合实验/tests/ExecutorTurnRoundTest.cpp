@@ -3,6 +3,7 @@
 #include <array>
 #include <memory>
 #include <string>
+#include <type_traits>
 
 #include "Executor.hpp"
 #include "PoseEq.hpp"
@@ -10,6 +11,9 @@
 #include "core/PoseHandler.hpp"
 
 namespace adas {
+
+static_assert(!std::is_copy_constructible_v<CmderFactory>, "CmderFactory must not be copy-constructible");
+static_assert(!std::is_copy_assignable_v<CmderFactory>, "CmderFactory must not be copy-assignable");
 
 TEST(ExecutorTurnRoundTest, should_follow_TR_rules_for_every_vehicle_state_and_heading)
 {
