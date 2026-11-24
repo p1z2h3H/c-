@@ -1,0 +1,89 @@
+实验1-高质量编程基础
+作者 彭彰航
+
+一、实验内容
+
+本实验使用C++17实现智能车执行器Executor组件，完成车辆初始化、状态查询、基本控制指令和批量指令执行，并使用GoogleTest编写单元测试，通过Git记录开发过程。
+
+车辆状态由Pose结构体表示，包括32位整数坐标x、y和字符朝向heading。N、S、E、W分别表示北、南、东、西，向北移动时y增加，向东移动时x增加。未指定初始状态时，车辆位于(0,0)，朝向N。
+
+二、文件结构
+
+include/Executor.hpp
+定义Pose结构体和Executor抽象接口，提供NewExecutor、Execute和Query三个接口。
+
+src/ExecutorImpl.hpp
+声明ExecutorImpl实现类，继承Executor，并通过私有成员pose保存车辆当前位置和朝向。
+
+src/ExecutorImpl.cpp
+实现执行器创建、初始状态保存、指令执行和状态查询。
+
+tests/ExecutorTest.cpp
+定义Pose相等比较运算符，并编写16个单元测试，检查初始化、移动、转向、批量指令和空指令的行为。
+
+CMakeLists.txt、src/CMakeLists.txt、tests/CMakeLists.txt
+配置C++17编译、功能库和测试程序的构建，并将测试注册到CTest。
+
+script/
+保存课程提供的构建与运行脚本。
+
+tests/googletest/
+使用课程起始工程提供的GoogleTest框架。
+
+三、接口与功能实现
+
+1. 创建与初始化
+Executor::NewExecutor接收Pose参数，创建ExecutorImpl对象。构造函数通过成员初始化列表保存初始状态，默认参数为{0,0,'N'}。测试代码使用std::unique_ptr管理对象，在测试结束时自动释放内存。
+
+2. 状态查询
+Query返回当前Pose。该函数声明为const，查询时保持车辆状态不变。
+
+3. 前进指令M
+根据当前朝向更新坐标，朝北时y加1，朝南时y减1，朝东时x加1，朝西时x减1，车辆朝向保持原值。
+
+4. 左转指令L
+位置保持原值，朝向按照N、W、S、E、N的顺序变化，每次左转90度。
+
+5. 右转指令R
+位置保持原值，朝向按照N、E、S、W、N的顺序变化，每次右转90度。
+
+6. 批量指令与空指令
+Execute使用范围for循环依次读取指令字符串中的字符，根据当前车辆状态逐条执行。空字符串对应零次循环，执行后状态保持原值。
+
+按照需求约束，接口输入均合法，执行过程中的坐标均在32位整数范围内。
+
+四、测试设计与结果
+
+测试采用准备对象、执行操作、断言结果的结构。各测试独立创建执行器，使用ASSERT_NE检查对象创建结果，再使用ASSERT_EQ比较预期状态和实际状态。
+
+共编写16个测试，具体包括以下内容。
+
+（1）指定初始化状态和默认初始化状态，共2个。
+（2）四种朝向下执行M指令，共4个。
+（3）四种朝向下执行L指令，共4个。
+（4）四种朝向下执行R指令，共4个。
+（5）批量指令执行，共1个。
+（6）空指令保持状态，共1个。
+
+批量测试从(0,0,N)开始执行MLMMRM，预期最终状态为(-2,2,N)。转向测试同时检查位置与朝向，确保转向过程中位置保持原值。
+
+本次检查在Windows环境下重新构建成功，16个GoogleTest测试全部通过，CTest中的training_main测试目标通过。
+
+五、构建与运行方法
+
+开发环境采用Windows、MinGW-w64、CMake 3.31.8、Git和VS Code，使用课程提供的GoogleTest版本。建议将工程解压到全英文路径，在包含根目录CMakeLists.txt的文件夹中打开PowerShell。
+
+使用课程脚本执行编译和测试。
+
+.\script\build_and_run.bat
+
+也可以依次执行以下命令，每条命令成功后再执行下一条。
+
+cmake -S . -B build -G "MinGW Makefiles"
+cmake --build build
+.\build\tests\training_main.exe
+ctest --test-dir build --output-on-failure
+
+六、版本管理
+
+开发过程中使用Git分阶段记录初始化、移动、转向和组合测试的修改。初始化、移动和转向功能分别先添加测试，再完成相应实现，并在测试通过后提交功能代码。

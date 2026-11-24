@@ -1,0 +1,57 @@
+实验3-1-面向对象编程
+作者 彭彰航
+
+一、实验内容
+
+本阶段在实验2的M、L、R、F功能和22个单元测试基础上进行重构。将车辆状态管理从ExecutorImpl中抽离，将指令类独立到Command.hpp，使用STL容器、智能指针和多态建立表驱动执行流程，并通过Point、Direction简化位置和朝向的变化。
+
+二、文件职责
+
+include/Executor.hpp
+定义Pose和Executor公开接口，提供创建、执行指令和查询状态的方法。
+
+src/ExecutorImpl.hpp、src/ExecutorImpl.cpp
+ExecutorImpl持有PoseHandler。Execute创建字符到指令对象的unordered_map映射，按照输入顺序查找指令并统一调用DoOperate，Query委托给PoseHandler。
+
+src/Command.hpp
+定义ICommand抽象接口及MoveCommand、TurnLeftCommand、TurnRightCommand、FastCommand四个实现类。指令类通过PoseHandler完成操作，指令层依赖状态管理层。
+
+src/PoseHandler.hpp、src/PoseHandler.cpp
+封装车辆位置、朝向与加速状态，提供单格移动、左右转、加速切换和查询。加速状态由对象持续保存，可以跨多次Execute调用生效。
+
+src/Point.hpp、src/Point.cpp
+用32位整数保存坐标，通过operator+=将单格位移向量累加到当前位置。
+
+src/Direction.hpp、src/Direction.cpp
+按N、E、S、W的顺时针顺序保存四个固定方向及位移向量。左转使用(index+3)%4，右转使用(index+1)%4。方向对象具有静态存储期，PoseHandler持有其地址。
+
+tests/ExecutorTest.cpp、tests/ExecutorFastTest.cpp
+保留初始化、四方向移动与转向、批量与空指令、加速、加速取消和状态持续性测试。
+
+tests/PoseEq.hpp、tests/PoseEq.cpp
+集中声明和定义Pose相等比较，供两个测试文件共同使用。
+
+三、实现要点
+
+1. 状态抽离
+ExecutorImpl只负责对外接口和指令分发，PoseHandler负责修改车辆状态。Command.hpp通过PoseHandler执行行为，消除指令类对ExecutorImpl的依赖。
+
+2. 表驱动
+unordered_map的键为M、L、R、F字符，值为unique_ptr<ICommand>。通过find获取指令对象，通过虚函数DoOperate执行对应行为。指令对象由智能指针自动释放。
+
+3. 状态抽象
+将四种朝向对应的坐标变化表示为位移向量，单格移动统一实现为point += facing->Move()。左右转通过固定方向表和模4运算完成。
+
+4. 功能行为
+普通状态下，M向前一格，L和R原地转向。F切换加速状态，加速M执行两次单格移动，加速L和R先向前一格再转向。再次收到F恢复普通状态。合法输入与32位坐标范围遵循课程需求约束。
+
+四、构建与验证
+
+使用Windows、MinGW-w64、CMake 3.31.8和课程自带GoogleTest，在工程根目录执行以下命令。
+
+cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel 4
+.\build\tests\training_main.exe
+ctest --test-dir build --output-on-failure
+
+本阶段在Windows下实际编译成功，继承自实验2的22个GoogleTest测试全部通过，CTest中的training_main测试目标通过。
